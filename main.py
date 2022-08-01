@@ -96,3 +96,5 @@ def getUsersTasks(user_id):
         
     return jsonify(total_items = len(tasksFile), data = tasksFile);
     
+if __name__ == '__main__':
+    app.run()
