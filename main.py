@@ -11,7 +11,7 @@ app = Flask(__name__);
 
 cors = CORS(app, resources={r"*": {"origins": "*"}});
 
-@app.route('/static/<path:path>')
+@app.route('/static/<path:path>', methods={'GET'})
 def send_static(path):
     return send_from_directory('static', path);
     
@@ -32,7 +32,7 @@ app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL);
 
 app.register_blueprint(REQUEST_API);
 
-@app.route("/tasks")
+@app.route("/tasks", methods={'GET'})
 def getTasks():
     completed = request.args.get('completed');
     title = request.args.get('title');
@@ -49,7 +49,7 @@ def getTasks():
 
     return jsonify(total_items = len(tasksFile), data = tasksFile);
 
-@app.route("/tasks/<id>")
+@app.route("/tasks/<id>", methods={'GET'})
 def getTasksById(id):
     with open('./data/tasks.json') as file:
         tasksFile = json.load(file);
@@ -59,14 +59,14 @@ def getTasksById(id):
         
     return jsonify(tasksFileFilterCompleted);
 
-@app.route("/users")
+@app.route("/users", methods={'GET'})
 def getUsers():
     with open('./data/users.json') as file:
         usersJson = json.load(file);
 
     return jsonify(total_items = len(usersJson), data = usersJson);
 
-@app.route("/users/<id>")
+@app.route("/users/<id>", methods={'GET'})
 def getUsersById(id):
     with open('./data/users.json') as file:
         usersJson = json.load(file);
@@ -76,7 +76,7 @@ def getUsersById(id):
         
     return jsonify(user);
 
-@app.route("/users/<user_id>/tasks")
+@app.route("/users/<user_id>/tasks", methods={'GET'})
 def getUsersTasks(user_id):
     completed = request.args.get('completed');
     title = request.args.get('title');
