@@ -4,7 +4,7 @@ from model.user import User;
 from model.task import Task;
 from utils.utils import readJson;
 from flask_swagger_ui import get_swaggerui_blueprint;
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin;
 import json;
 
 app = Flask(__name__);
@@ -12,6 +12,7 @@ app = Flask(__name__);
 cors = CORS(app, resources={r"*": {"origins": "*"}});
 
 @app.route('/static/<path:path>', methods={'GET'})
+@cross_origin()
 def send_static(path):
     return send_from_directory('static', path);
     
@@ -33,6 +34,7 @@ app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL);
 app.register_blueprint(REQUEST_API);
 
 @app.route("/tasks", methods={'GET'})
+@cross_origin()
 def getTasks():
     completed = request.args.get('completed');
     title = request.args.get('title');
@@ -50,6 +52,7 @@ def getTasks():
     return jsonify(total_items = len(tasksFile), data = tasksFile);
 
 @app.route("/tasks/<id>", methods={'GET'})
+@cross_origin()
 def getTasksById(id):
     with open('./data/tasks.json') as file:
         tasksFile = json.load(file);
@@ -60,6 +63,7 @@ def getTasksById(id):
     return jsonify(tasksFileFilterCompleted);
 
 @app.route("/users", methods={'GET'})
+@cross_origin()
 def getUsers():
     with open('./data/users.json') as file:
         usersJson = json.load(file);
@@ -67,6 +71,7 @@ def getUsers():
     return jsonify(total_items = len(usersJson), data = usersJson);
 
 @app.route("/users/<id>", methods={'GET'})
+@cross_origin()
 def getUsersById(id):
     with open('./data/users.json') as file:
         usersJson = json.load(file);
@@ -77,6 +82,7 @@ def getUsersById(id):
     return jsonify(user);
 
 @app.route("/users/<user_id>/tasks", methods={'GET'})
+@cross_origin()
 def getUsersTasks(user_id):
     completed = request.args.get('completed');
     title = request.args.get('title');
