@@ -60,7 +60,7 @@ def getTasksById(id):
     if id is not None:
         tasksFileFilterCompleted = [x for x in tasksFile if x['id'] is int(id)];
         
-    return jsonify(tasksFileFilterCompleted);
+    return jsonify(total_items = len(tasksFileFilterCompleted),data = tasksFileFilterCompleted);
 
 @app.route("/tasks/status/<completed>", methods={'GET'})
 @cross_origin()
@@ -71,7 +71,7 @@ def getTasksByStatus(completed):
     if completed is not None:
         tasksFileFilterCompleted = [x for x in tasksFile if x['completed'] == (completed == "true")];
         
-    return jsonify(tasksFileFilterCompleted);
+    return jsonify(total_items = len(tasksFileFilterCompleted),data = tasksFileFilterCompleted);
 
 @app.route("/users", methods={'GET'})
 @cross_origin()
