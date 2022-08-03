@@ -62,6 +62,17 @@ def getTasksById(id):
         
     return jsonify(tasksFileFilterCompleted);
 
+@app.route("/tasks/status/<completed>", methods={'GET'})
+@cross_origin()
+def getTasksById(completed):
+    with open('./data/tasks.json') as file:
+        tasksFile = json.load(file);
+
+    if completed is not None:
+        tasksFileFilterCompleted = [x for x in tasksFile if x['completed'] == (completed == "true")];
+        
+    return jsonify(tasksFileFilterCompleted);
+
 @app.route("/users", methods={'GET'})
 @cross_origin()
 def getUsers():
