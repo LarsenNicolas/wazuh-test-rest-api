@@ -16,3 +16,7 @@
 ## End points documentation
 
     https://wazuh-test-rest-api.herokuapp.com/swagger/
+
+## See Heroku logs:
+
+    heroku logs --tail

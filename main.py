@@ -64,7 +64,7 @@ def getTasksById(id):
 
 @app.route("/tasks/status/<completed>", methods={'GET'})
 @cross_origin()
-def getTasksById(completed):
+def getTasksByStatus(completed):
     with open('./data/tasks.json') as file:
         tasksFile = json.load(file);
 
