@@ -1,7 +1,8 @@
-from pydantic import BaseModel;
+from pydantic import BaseModel
 
 class Task(BaseModel):
-    user_id: int;
-    id: int;
-    title: str;
-    completed: bool;
+    """Task model."""
+    user_id: int
+    id: int
+    title: str
+    completed: bool

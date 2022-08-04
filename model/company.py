@@ -1,6 +1,7 @@
-from pydantic import BaseModel;
+from pydantic import BaseModel
 
 class Company(BaseModel):
-    name: str;
-    catchPhrase: int;
-    bs: str;
+    """Company model."""
+    name: str
+    catchPhrase: int
+    bs: str

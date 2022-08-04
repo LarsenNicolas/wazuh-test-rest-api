@@ -1,5 +1,6 @@
-from pydantic import BaseModel;
+from pydantic import BaseModel
 
 class Geo(BaseModel):
-    lat: str;
-    lng: str;
+    """Geo model."""
+    lat: str
+    lng: str

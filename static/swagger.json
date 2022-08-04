@@ -163,6 +163,31 @@
                     }
                 }
             }
+        },
+        "/tasks/status/{completed}": {
+            "parameters": [
+                {
+                    "name": "completed",
+                    "in": "path",
+                    "required": true,
+                    "description": "Return task with status",
+                    "type": "number"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "TasksID"
+                ],
+                "summary": "Returns task by id",
+                "responses": {
+                "200": {
+                        "description": "OK",
+                        "schema": {
+                        "$ref": "#/components/schemas/task"
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {

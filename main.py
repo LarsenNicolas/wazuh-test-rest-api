@@ -1,21 +1,28 @@
-from traceback import print_tb
+"""Endpoint routes."""
+import json
 from flask import Flask, jsonify, request, send_from_directory, Blueprint
-from model.user import User;
-from model.task import Task;
-from utils.utils import readJson;
-from flask_swagger_ui import get_swaggerui_blueprint;
-from flask_cors import CORS, cross_origin;
-import json;
+from flask_swagger_ui import get_swaggerui_blueprint
+from flask_cors import CORS, cross_origin
 
-app = Flask(__name__);
+app = Flask(__name__)
 
-cors = CORS(app, resources={r"*": {"origins": "*"}});
+cors = CORS(app, resources={r"*": {"origins": "*"}})
+
+def get_tasks():
+    """Open tasks file and returns its as json."""
+    with open('./data/tasks.json', encoding='UTF-8') as file:
+        return json.load(file)
+
+def get_users():
+    """Open users file and returns its as json."""
+    with open('./data/users.json', encoding='UTF-8') as file:
+        return json.load(file)
 
 @app.route('/static/<path:path>', methods={'GET'})
 @cross_origin()
 def send_static(path):
-    return send_from_directory('static', path);
-    
+    """Static path for swagger."""
+    return send_from_directory('static', path)
 SWAGGER_URL = '/swagger'
 API_URL = '/static/swagger.json'
 
@@ -25,93 +32,94 @@ swaggerui_blueprint = get_swaggerui_blueprint(
     config = {
         'app_name': "WAZUH-TEST-REST-API"
     }
-);
+)
 
 REQUEST_API = Blueprint('request_api', __name__)
 
-app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL);
+app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
-app.register_blueprint(REQUEST_API);
+app.register_blueprint(REQUEST_API)
 
 @app.route("/tasks", methods={'GET'})
 @cross_origin()
-def getTasks():
-    completed = request.args.get('completed');
-    title = request.args.get('title');
+def get_all_tasks():
+    """Function returns tasks."""
+    completed = request.args.get('completed')
+    title = request.args.get('title')
 
-    with open('./data/tasks.json') as file:
-        tasksFile = json.load(file);
+    tasks_file = get_tasks()
 
     if completed is not None:
-        tasksFileFilterCompleted = [x for x in tasksFile if x['completed'] == (completed == "true")];
-        tasksFile = tasksFileFilterCompleted;
+        tasks_file_filter_completed = [x for x in tasks_file if x['completed']
+                                        == (completed == "true")]
+        tasks_file = tasks_file_filter_completed
     if title is not None:
-        tasksFileFilterTitle = [x for x in tasksFile if x['title'] == title];
-        tasksFile = tasksFileFilterTitle;
+        tasks_file_filter_title = [x for x in tasks_file if x['title'] == title]
+        tasks_file = tasks_file_filter_title
 
-    return jsonify(total_items = len(tasksFile), data = tasksFile);
+    return jsonify(total_items = len(tasks_file), data = tasks_file)
 
 @app.route("/tasks/<id>", methods={'GET'})
 @cross_origin()
-def getTasksById(id):
-    with open('./data/tasks.json') as file:
-        tasksFile = json.load(file);
+def get_tasks_by_id(task_id):
+    """Function returns tasks by id."""
+    tasks_file = get_tasks()
 
-    if id is not None:
-        tasksFileFilterCompleted = [x for x in tasksFile if x['id'] is int(id)];
-        
-    return jsonify(total_items = len(tasksFileFilterCompleted),data = tasksFileFilterCompleted);
+    if task_id is not None:
+        tasks_file_filter_completed = [x for x in tasks_file if x['id'] is int(task_id)]
+    return jsonify(total_items = len(tasks_file_filter_completed),
+                   data = tasks_file_filter_completed)
 
 @app.route("/tasks/status/<completed>", methods={'GET'})
 @cross_origin()
-def getTasksByStatus(completed):
-    with open('./data/tasks.json') as file:
-        tasksFile = json.load(file);
+def get_tasks_by_status(completed):
+    """Function tasks by status."""
+    tasks_file = get_tasks()
 
     if completed is not None:
-        tasksFileFilterCompleted = [x for x in tasksFile if x['completed'] == (completed == "true")];
-        
-    return jsonify(total_items = len(tasksFileFilterCompleted),data = tasksFileFilterCompleted);
+        tasks_file_filter_completed = [x for x in tasks_file if x['completed']
+                                        == (completed == "true")]
+    return jsonify(total_items = len(tasks_file_filter_completed),
+                   data = tasks_file_filter_completed)
 
 @app.route("/users", methods={'GET'})
 @cross_origin()
-def getUsers():
-    with open('./data/users.json') as file:
-        usersJson = json.load(file);
+def get_all_users():
+    """Function returns users."""
+    users_json = get_users()
 
-    return jsonify(total_items = len(usersJson), data = usersJson);
+    return jsonify(total_items = len(users_json), data = users_json)
 
 @app.route("/users/<id>", methods={'GET'})
 @cross_origin()
-def getUsersById(id):
-    with open('./data/users.json') as file:
-        usersJson = json.load(file);
+def get_users_by_id(user_id):
+    """Function returns users by id."""
+    users_json = get_users()
 
-    if id is not None:
-        user = [x for x in usersJson if x['id'] is int(id)];
-        
-    return jsonify(user);
+    if user_id is not None:
+        user = [x for x in users_json if x['id'] is int(user_id)]
+    return jsonify(user)
 
 @app.route("/users/<user_id>/tasks", methods={'GET'})
 @cross_origin()
-def getUsersTasks(user_id):
-    completed = request.args.get('completed');
-    title = request.args.get('title');
+def get_users_tasks(user_id):
+    """Function returns tasks by user."""
+    completed = request.args.get('completed')
+    title = request.args.get('title')
 
-    with open('./data/tasks.json') as file:
-        tasksFile = json.load(file);
+    tasks_file = get_tasks()
 
     if completed is not None:
-        tasksFileFilterCompleted = [x for x in tasksFile if x['completed'] == (completed == "true")];
-        tasksFile = tasksFileFilterCompleted;
+        tasks_file_filter_completed = [x for x in tasks_file if x['completed']
+                                        == (completed == "true")]
+        tasks_file = tasks_file_filter_completed
     if title is not None:
-        tasksFileFilterTitle = [x for x in tasksFile if x['title'] == title];
-        tasksFile = tasksFileFilterTitle;
+        tasks_file_filter_title = [x for x in tasks_file if x['title'] == title]
+        tasks_file = tasks_file_filter_title
     if user_id is not None:
-        tasksFilterByUser = [x for x in tasksFile if x['user_id'] == int(user_id)];
-        tasksFile = tasksFilterByUser;
-        
-    return jsonify(total_items = len(tasksFile), data = tasksFile);
-    
+        tasks_filter_by_user = [x for x in tasks_file if x['user_id'] == int(user_id)]
+        tasks_file = tasks_filter_by_user
+    return jsonify(total_items = len(tasks_file), data = tasks_file)
+
 if __name__ == '__main__':
     app.run()
