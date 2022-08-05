@@ -170,13 +170,13 @@
                     "name": "completed",
                     "in": "path",
                     "required": true,
-                    "description": "Return task with status",
+                    "description": "Return task with specified status",
                     "type": "number"
                 }
             ],
             "get": {
                 "tags": [
-                    "TasksID"
+                    "Tasks by status"
                 ],
                 "summary": "Returns task by id",
                 "responses": {
